@@ -1,0 +1,29 @@
+options(digits = 3)    # report 3 significant digits
+library(tidyverse)
+library(titanic)
+
+install.packages('titanic')
+
+titanic <- titanic_train %>%
+  select(Survived, Pclass, Sex, Age, SibSp, Parch, Fare) %>%
+  mutate(Survived = factor(Survived),
+         Pclass = factor(Pclass),
+         Sex = factor(Sex))
+
+total <- titanic %>%
+  filter(Sex %in% c("female","male")) %>%
+  count(Sex)
+total
+
+
+
+params <- titanic %>%
+  filter(!is.na(Age)) %>%
+  summarize(mean = mean(Age), sd = sd(Age))
+
+
+p <- titanic %>%
+  ggplot(aes(x = Age, y = ..count.., fill = Survived)) +
+  geom_density(alpha = 0.2) +
+  facet_grid(Pclass ~ Sex)
+p
